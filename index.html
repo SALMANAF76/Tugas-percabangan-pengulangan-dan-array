@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Catur Skak</title>
+    <style>
+        /* CSS untuk papan catur */
+        .papan-catur {
+            display: grid;
+            grid-template-columns: repeat(5, 50px); /* 5 kolom */
+            grid-template-rows: repeat(5, 50px);    /* 5 baris */
+            gap: 0;
+        }
+        .kotak {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+        .kotak-putih {
+            background-color: white;
+        }
+        .kotak-hitam {
+            background-color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Simulasi Catur</h1>
+<div id="papan" class="papan-catur"></div>
+<p id="status"></p>
+
+<script>
+// Ukuran papan catur
+const ukuran = 5;
+
+// Fungsi untuk membuat papan catur
+function buatPapanCatur(rajaPos, bentengPos) {
+    const papan = document.getElementById('papan');
+    papan.innerHTML = ''; // Kosongkan papan sebelum digambar
+
+    for (let i = 1; i <= ukuran * ukuran; i++) {
+        const kotak = document.createElement('div');
+        kotak.className = 'kotak ' + ((Math.floor((i - 1) / ukuran) + (i - 1) % ukuran) % 2 === 0 ? 'kotak-putih' : 'kotak-hitam');
+
+        // Menentukan posisi raja dan benteng
+        if (i === rajaPos) {
+            kotak.textContent = '🟡'; // Simbol raja
+        } else if (i === bentengPos) {
+            kotak.textContent = '🟣'; // Simbol benteng
+        } else {
+            kotak.textContent = '⬜'; // Kotak kosong
+        }
+
+        papan.appendChild(kotak);
+    }
+}
+
+// Fungsi untuk memeriksa apakah raja dalam posisi check
+function isRajaCheck(rajaPos, bentengPos) {
+    const rajaRow = Math.ceil(rajaPos / ukuran); // Menghitung baris raja
+    const rajaCol = (rajaPos - 1) % ukuran; // Menghitung kolom raja
+
+    const bentengRow = Math.ceil(bentengPos / ukuran); // Menghitung baris benteng
+    const bentengCol = (bentengPos - 1) % ukuran; // Menghitung kolom benteng
+
+    // Memeriksa apakah raja dan benteng berada dalam satu baris atau kolom
+    return rajaRow === bentengRow || rajaCol === bentengCol;
+}
+
+// Posisi raja dan benteng
+const rajaPos = 8; // Raja di kotak 8
+const bentengPos = 18; // Benteng di kotak 18
+
+// Menampilkan papan catur
+buatPapanCatur(rajaPos, bentengPos);
+
+// Memeriksa dan menampilkan apakah raja dalam posisi check
+const statusElement = document.getElementById('status');
+if (isRajaCheck(rajaPos, bentengPos)) {
+    statusElement.textContent = "Raja dalam posisi CHECK!";
+} else {
+    statusElement.textContent = "Raja tidak dalam posisi CHECK.";
+}
+</script>
+
+</body>
+</html>
